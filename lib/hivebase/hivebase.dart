@@ -31,12 +31,13 @@ class HiveBase {
       var appPath = Directory.current.path;
       pathFinal = p.join(appPath, _folder);
     } catch (e) {
-      throw HiveBaseException(message: 'In initInDart. ICantOpenDirectory');
+      throw HiveBaseException(
+          message: 'Erro em initInDart. ICantOpenDirectory');
     }
     try {
       Hive.init(pathFinal);
     } catch (e) {
-      throw HiveBaseException(message: 'In initInDart. ICantInit');
+      throw HiveBaseException(message: 'Erro em initInDart. ICantInit');
     }
     await _getNameOfBoxes();
   }
@@ -57,13 +58,15 @@ class HiveBase {
   Future<void> _getNameOfBoxes() async {
     var boxOpen = await Hive.openBox(_boxWithListAllBoxes);
     if (!boxOpen.isOpen) {
-      throw HiveBaseException(message: 'In _getNameOfBoxes. ICantOpenTheBox');
+      throw HiveBaseException(
+          message: 'Erro em _getNameOfBoxes. ICantOpenTheBox');
     }
     dynamic boxes;
     try {
       boxes = boxOpen.get(_boxWithListAllBoxes) ?? {};
     } catch (e) {
-      throw HiveBaseException(message: 'In _getNameOfBoxes. ICantGetValue');
+      throw HiveBaseException(
+          message: 'Erro em _getNameOfBoxes. ICantGetValue');
     }
     _updateNameOfBoxes(boxes);
   }
@@ -79,7 +82,7 @@ class HiveBase {
     try {
       await Hive.close();
     } catch (e) {
-      throw HiveBaseException(message: 'In closeAll. ICantCloseBoxes');
+      throw HiveBaseException(message: 'Erro em closeAll. ICantCloseBoxes');
     }
   }
 
@@ -88,7 +91,7 @@ class HiveBase {
     try {
       await _box!.close();
     } catch (e) {
-      throw HiveBaseException(message: 'In close. ICantCloseBox');
+      throw HiveBaseException(message: 'Erro em close. ICantCloseBox');
     }
   }
 
@@ -102,12 +105,12 @@ class HiveBase {
     try {
       _box = Hive.box(_boxWithListAllBoxes);
     } catch (e) {
-      throw HiveBaseException(message: 'In _saveBox. ICantGetTheBox');
+      throw HiveBaseException(message: 'Erro em _saveBox. ICantGetTheBox');
     }
     try {
       await _box!.put(_boxWithListAllBoxes, _boxes.toList());
     } catch (e) {
-      throw HiveBaseException(message: 'In _saveBox. ICantPutValue');
+      throw HiveBaseException(message: 'Erro em _saveBox. ICantPutValue');
     }
   }
 
@@ -115,7 +118,7 @@ class HiveBase {
     try {
       await Hive.openBox(name);
     } catch (e) {
-      throw HiveBaseException(message: 'In _openBox. ICantOpenTheBox');
+      throw HiveBaseException(message: 'Erro em _openBox. ICantOpenTheBox');
     }
   }
 
@@ -126,7 +129,7 @@ class HiveBase {
       }
       _box = Hive.box(name);
     } else {
-      throw HiveBaseException(message: 'In _getBox. UnregisteredBox');
+      throw HiveBaseException(message: 'Erro em _getBox. UnregisteredBox');
     }
   }
 
@@ -145,7 +148,7 @@ class HiveBase {
     try {
       await _box!.put(data[fieldUuid], data);
     } catch (e) {
-      throw HiveBaseException(message: 'In create. ICantPutValue');
+      throw HiveBaseException(message: 'Erro em create. ICantPutValue');
     }
     return data[fieldUuid];
   }
@@ -164,7 +167,7 @@ class HiveBase {
       try {
         await _box!.put(item[fieldUuid], item);
       } catch (e) {
-        throw HiveBaseException(message: 'In createAll. ICantPutValue');
+        throw HiveBaseException(message: 'Erro em createAll. ICantPutValue');
       }
     }
   }
@@ -178,13 +181,13 @@ class HiveBase {
       try {
         doc = _box!.get(id);
       } catch (e) {
-        throw HiveBaseException(message: 'In get. ICantGetValue');
+        throw HiveBaseException(message: 'Erro em get. ICantGetValue');
       }
       if (doc != null) {
         try {
           map = doc.cast<String, dynamic>();
         } catch (e) {
-          throw HiveBaseException(message: 'In get. ICantCastData');
+          throw HiveBaseException(message: 'Erro em get. ICantCastData');
         }
       }
     }
@@ -202,14 +205,14 @@ class HiveBase {
         try {
           doc = _box!.get(boxKey);
         } catch (e) {
-          throw HiveBaseException(message: 'In readAll. ICantGetValue');
+          throw HiveBaseException(message: 'Erro em readAll. ICantGetValue');
         }
         if (doc != null) {
           var map = <String, dynamic>{};
           try {
             map = doc.cast<String, dynamic>();
           } catch (e) {
-            throw HiveBaseException(message: 'In readAll. ICantGetValue');
+            throw HiveBaseException(message: 'Erro em readAll. ICantGetValue');
           }
           docs.add(map);
         }
@@ -232,7 +235,7 @@ class HiveBase {
     try {
       await _box!.put(data[fieldUuid], data);
     } catch (e) {
-      throw HiveBaseException(message: 'In update. ICantGetValue');
+      throw HiveBaseException(message: 'Erro em update. ICantGetValue');
     }
     return Future.value(true);
   }
@@ -241,7 +244,7 @@ class HiveBase {
     try {
       _box!.delete(id);
     } catch (e) {
-      throw HiveBaseException(message: 'In delete. ICantOneDelete');
+      throw HiveBaseException(message: 'Erro em delete. ICantOneDelete');
     }
   }
 
@@ -249,7 +252,7 @@ class HiveBase {
     try {
       await Hive.deleteBoxFromDisk(boxName);
     } catch (e) {
-      throw HiveBaseException(message: 'In deleteAll. ICantDeleteAllBox');
+      throw HiveBaseException(message: 'Erro em deleteAll. ICantDeleteAllBox');
     }
   }
 
@@ -261,7 +264,7 @@ class HiveBase {
         await Hive.deleteBoxFromDisk(boxName);
       }
     } catch (e) {
-      throw HiveBaseException(message: 'In deleteAll. ICantDeleteAllBox');
+      throw HiveBaseException(message: 'Erro em deleteAll. ICantDeleteAllBox');
     }
   }
 
@@ -270,7 +273,7 @@ class HiveBase {
     try {
       box = await Hive.openBox(_boxWithListAllBoxes);
     } catch (e) {
-      throw HiveBaseException(message: 'In listOfBoxes. ICantOpenTheBox');
+      throw HiveBaseException(message: 'Erro em listOfBoxes. ICantOpenTheBox');
     }
     var list = <String>[];
     dynamic doc;
@@ -278,13 +281,14 @@ class HiveBase {
       try {
         doc = box.get(_boxWithListAllBoxes);
       } catch (e) {
-        throw HiveBaseException(message: 'In listOfBoxes. ICantGetValue');
+        throw HiveBaseException(message: 'Erro em listOfBoxes. ICantGetValue');
       }
       if (doc != null) {
         try {
           list = doc.cast<String>();
         } catch (e) {
-          throw HiveBaseException(message: 'In listOfBoxes. ICantCastData');
+          throw HiveBaseException(
+              message: 'Erro em listOfBoxes. ICantCastData');
         }
       }
     }

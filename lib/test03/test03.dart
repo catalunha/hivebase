@@ -37,9 +37,18 @@ void main() async {
     // print('$collection');
     //ReadAll
     List<Map<String, dynamic>> collections = await conn.readAll('teste1');
+    print('ReadAll');
     for (var item in collections) {
       print(item);
     }
+    await conn.deleteAll('teste1');
+    //ReadAll
+    collections = await conn.readAll('teste1');
+    print('ReadAll');
+    for (var item in collections) {
+      print(item);
+    }
+
     //ReadAll Boxes
     print('+++>Listando todos os boxes');
     List<String> boxes = await conn.listAllBoxes();
