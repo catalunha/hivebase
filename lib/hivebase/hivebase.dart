@@ -294,4 +294,79 @@ class HiveBase {
     }
     return list;
   }
+
+  Future<List<Map<String, dynamic>>> findByValue({
+    required String boxName,
+    required String fieldName,
+    required String value,
+  }) {
+    return Future.value([]);
+  }
+
+  Future<List<Map<String, dynamic>>> findInList({
+    required String boxName,
+    required String fieldName,
+    required String value,
+  }) {
+    return Future.value([]);
+  }
+
+  Future<List<Map<String, dynamic>>> findByPeriod({
+    required String boxName,
+    required String fieldName,
+    required DateTime start,
+    required DateTime end,
+  }) async {
+    if (start.isAfter(end)) {
+      throw HiveBaseException(message: 'Erro em findByPeriod. Start > end');
+    }
+    // final startFilter = DateTime(start.year, start.month, start.day, 0, 0, 0);
+    // final endFilter = DateTime(end.year, end.month, end.day, 23, 59, 59);
+    await _getBox(boxName);
+    // List<Map<String, dynamic>> filtered = [];
+    var filtered = <Map<String, dynamic>>{};
+
+    dynamic doc;
+    if (_box!.isNotEmpty) {
+      var docs = <Map<String, dynamic>>{};
+      for (var boxKey in _box!.keys) {
+        try {
+          doc = _box!.get(boxKey);
+        } catch (e) {
+          throw HiveBaseException(
+              message: 'Erro em findByPeriod. ICantGetValue');
+        }
+        if (doc != null) {
+          var map = <String, dynamic>{};
+          try {
+            map = doc.cast<String, dynamic>();
+          } catch (e) {
+            throw HiveBaseException(
+                message: 'Erro em findByPeriod. ICantCastValue');
+          }
+          docs.add(map);
+        }
+      }
+      for (var doc in docs) {
+        if (doc.containsKey(fieldName)) {
+          var date;
+          try {
+            date = DateTime.fromMillisecondsSinceEpoch(
+                doc[fieldName].millisecondsSinceEpoch);
+          } catch (e) {
+            throw HiveBaseException(
+                message:
+                    'Erro em findByPeriod. I cant convert $fieldName to date');
+          }
+          if (date.isAtSameMomentAs(start) || date.isAtSameMomentAs(end)) {
+            filtered.add(doc);
+          } else if (date.isAfter(start) && date.isBefore(end)) {
+            filtered.add(doc);
+          }
+        }
+      }
+    }
+    //print(filtered);
+    return filtered.toList();
+  }
 }

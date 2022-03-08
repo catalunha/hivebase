@@ -2,6 +2,7 @@
 
 Meu projeto de estudos com o Hive. Qq issue ajuda.
 
+Ainda não esta no formato de um package mas vou atualizar. :-)
 
 # Version 03 (dev)
 
